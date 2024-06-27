@@ -18,6 +18,7 @@ startPlaygroundWeb({
 			const l = link.href.split( '#' )[0];
 			if ( ! l ) return;
 			if ( ! l.startsWith( location.origin ) ) return;
+			if ( l.includes( '/tag/' ) ) return;
 			if ( l.includes( '/category/' ) ) return;
 			if ( l.includes( '/author/' ) ) return;
 			if ( l.includes( '/wp-admin/' ) ) return;
