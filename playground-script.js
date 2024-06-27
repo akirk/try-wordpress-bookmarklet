@@ -91,8 +91,7 @@ startPlaygroundWeb({
 							status('Error');
 							setTimeout( extract, 1000 );
 						};
-				}
-				);
+				} );
 			});
 		});
 		}
