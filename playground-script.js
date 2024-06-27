@@ -9,29 +9,28 @@ startPlaygroundWeb({
 		console.log( step );
 	},
 	blueprint: blueprint
-}).then(
-	function ( p ) {
-		const queue = [ location.href ];
-		window.playground = p;
+}).then(function ( p ) {
+	const queue = [ location.href ];
+	window.playground = p;
 
-		Array.from(document.querySelectorAll('a')).forEach( function( link ) {
-			const l = link.href.split( '#' )[0];
-			if ( ! l ) return;
-			if ( ! l.startsWith( location.origin ) ) return;
-			if ( l.includes( '/tag/' ) ) return;
-			if ( l.includes( '/category/' ) ) return;
-			if ( l.includes( '/author/' ) ) return;
-			if ( l.includes( '/wp-admin/' ) ) return;
-			if ( l.includes( '/wp-login' ) ) return;
-			if ( queue.includes( l ) ) return;
-			queue.push( l );
-		} );
-		console.log( queue );
-		extract();
-		function extract () {
-			const status = function( text ) {
-			const status = document.getElementById('playground-status');
-			if ( status ) status.innerText = page + ': ' + text + '...';
+	Array.from(document.querySelectorAll('a')).forEach( function( link ) {
+		const l = link.href.split( '#' )[0];
+		if ( ! l ) return;
+		if ( ! l.startsWith( location.origin ) ) return;
+		if ( l.includes( '/tag/' ) ) return;
+		if ( l.includes( '/category/' ) ) return;
+		if ( l.includes( '/author/' ) ) return;
+		if ( l.includes( '/wp-admin/' ) ) return;
+		if ( l.includes( '/wp-login' ) ) return;
+		if ( queue.includes( l ) ) return;
+		queue.push( l );
+	} );
+	console.log( queue );
+	extract();
+	function extract () {
+		const status = function( text ) {
+		const status = document.getElementById('playground-status');
+		if ( status ) status.innerText = page + ': ' + text + '...';
 			else console.log( text );
 		};
 
@@ -40,7 +39,6 @@ startPlaygroundWeb({
 		fetch( location.href ).then( function( response ) {
 			status('Received HTML');
 			response.text().then( function( text ) {
-
 				status('Waiting for response from OpenAI');
 				fetch( 'https://api.openai.com/v1/chat/completions', {
 					method: 'POST',
@@ -69,31 +67,26 @@ startPlaygroundWeb({
 					})
 				}).then( function( response ) {
 					status('Sending to Playground');
-					if ( ! response.ok ) {
-						console.log( response );
-						status('Error');
-						setTimeout( extract, 1000 );
-						return;
-					}
-					response.json().then( function( data ) {
-						const c = data.choices[0].message.content.replace(/```php/g, '<?php').replace(/```/g, '?>').replace(/<\\?php\\n<\\?php/g, '<?php');
-						console.log('<?php require_once "wordpress/wp-load.php"; ?>' + c );
-						try {
-							p.run( { code:'<?php require_once "wordpress/wp-load.php"; ?>' + c }).then(
+					try {
+						if ( ! response.ok ) throw response;
+						response.json().then( function( data ) {
+							const c = data.choices[0].message.content.replace(/```php/g, '<?php').replace(/```/g, '?>').replace(/<\\?php\\n<\\?php/g, '<?php');
+							console.log('<?php require_once "wordpress/wp-load.php"; ?>' + c );
+							p.run( { code:'<?php require_once "wordpress/wp-load.php"; ?>' + c } ).then(
 								function( r ) {
 									console.log( r );
 									status('Completed');
 									setTimeout( extract, 1000 );
 								}
 							);
-						} catch ( e ) {
-							console.log( e );
-							status('Error');
-							setTimeout( extract, 1000 );
-						};
-				} );
+						} );
+					} catch ( e ) {
+						console.log( e );
+						status('Error');
+						setTimeout( extract, 1000 );
+					};
+				});
 			});
 		});
-		}
 	}
-);
+});
