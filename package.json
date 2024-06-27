@@ -1,0 +1,8 @@
+{
+  "name": "try-wordpress",
+  "version": "1.0.0",
+  "description": "Package to build index.html from index.php for trying out WordPress development",
+  "scripts": {
+    "build": "php index.php > index.html"
+  }
+}
