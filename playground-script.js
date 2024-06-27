@@ -56,7 +56,7 @@ startPlaygroundWeb({
 								'This is the HTML from the page ' + page + '. ' +
 								'Return valid WordPress PHP to create the appropriate page using wp_insert_post with the right title and slug. ' +
 								'Only use the post post_type when its a blog post.' +
-								'Try to use the correct date. ' +
+								'Try to use the correct date and ensure to include the full post_content. ' +
 								'Use WordPress PHP functions to set the appropriate title for the whole WordPress site. ' +
 								'Also produce WordPress PHP code to recreate the navigation.'
 						},
