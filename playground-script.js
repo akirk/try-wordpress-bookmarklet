@@ -26,7 +26,7 @@ startPlaygroundWeb({
 		queue.push( l );
 	} );
 	console.log( queue );
-	extract();
+	setInterval( extract, 10000 );
 	function extract () {
 		const status = function( text ) {
 		const status = document.getElementById('playground-status');
@@ -76,14 +76,12 @@ startPlaygroundWeb({
 								function( r ) {
 									console.log( r );
 									status('Completed');
-									setTimeout( extract, 1000 );
 								}
 							);
 						} );
 					} catch ( e ) {
 						console.log( e );
 						status('Error');
-						setTimeout( extract, 1000 );
 					};
 				});
 			});
