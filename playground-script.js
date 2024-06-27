@@ -58,6 +58,7 @@ startPlaygroundWeb({
 								'Return valid WordPress PHP to create the appropriate page using wp_insert_post with the right title and slug. ' +
 								'Only use the post post_type when its a blog post.' +
 								'Try to use the correct date. ' +
+								'Use WordPress PHP functions to set the appropriate title for the whole WordPress site. ' +
 								'Also produce WordPress PHP code to recreate the navigation.'
 						},
 						{
@@ -68,6 +69,12 @@ startPlaygroundWeb({
 					})
 				}).then( function( response ) {
 					status('Sending to Playground');
+					if ( ! response.ok ) {
+						console.log( response );
+						status('Error');
+						setTimeout( extract, 1000 );
+						return;
+					}
 					response.json().then( function( data ) {
 						const c = data.choices[0].message.content.replace(/```php/g, '<?php').replace(/```/g, '?>').replace(/<\\?php\\n<\\?php/g, '<?php');
 						console.log('<?php require_once "wordpress/wp-load.php"; ?>' + c );
