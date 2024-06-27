@@ -26,7 +26,8 @@ startPlaygroundWeb({
 		queue.push( l );
 	} );
 	console.log( queue );
-	setInterval( extract, 10000 );
+	extract();
+	setInterval( extract, 5000 );
 	function extract () {
 		const status = function( text ) {
 		const status = document.getElementById('playground-status');
