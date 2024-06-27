@@ -15,7 +15,7 @@ startPlaygroundWeb({
 
 	Array.from(document.querySelectorAll('a')).forEach( function( link ) {
 		const l = link.href.split( '#' )[0];
-		if ( ! l ) return;
+		if ( l === undefined ) return;
 		if ( ! l.startsWith( location.origin ) ) return;
 		if ( l.includes( '/tag/' ) ) return;
 		if ( l.includes( '/category/' ) ) return;
@@ -27,7 +27,7 @@ startPlaygroundWeb({
 	} );
 	console.log( queue );
 	extract();
-	setInterval( extract, 5000 );
+	const interval = setInterval( extract, 5000 );
 	function extract () {
 		const status = function( text ) {
 		const status = document.getElementById('playground-status');
@@ -36,6 +36,11 @@ startPlaygroundWeb({
 		};
 
 		const page = queue.shift();
+		if ( ! page ) {
+			status('Finished for now');
+			clearInterval( interval );
+			return;
+		}
 		status('Downloading');
 		fetch( location.href ).then( function( response ) {
 			status('Received HTML');
