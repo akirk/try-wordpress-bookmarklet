@@ -78,14 +78,19 @@ startPlaygroundWeb({
 					response.json().then( function( data ) {
 						const c = data.choices[0].message.content.replace(/```php/g, '<?php').replace(/```/g, '?>').replace(/<\\?php\\n<\\?php/g, '<?php');
 						console.log('<?php require_once "wordpress/wp-load.php"; ?>' + c );
-						p.run( { code:'<?php require_once "wordpress/wp-load.php"; ?>' + c }).then(
-							function( r ) {
-								console.log( r );
-								status('Completed');
-								setTimeout( extract, 1000 );
-							}
-						);
-					});
+						try {
+							p.run( { code:'<?php require_once "wordpress/wp-load.php"; ?>' + c }).then(
+								function( r ) {
+									console.log( r );
+									status('Completed');
+									setTimeout( extract, 1000 );
+								}
+							);
+						} catch ( e ) {
+							console.log( e );
+							status('Error');
+							setTimeout( extract, 1000 );
+						};
 				}
 				);
 			});
